@@ -1,24 +1,29 @@
-"use client"
-import { useForm } from 'react-hook-form'
-import { Button } from "@/components/ui/button"
+"use client";
+
+import * as z from "zod";
+import Image from "next/image";
+import { useForm } from "react-hook-form";
+import { usePathname, useRouter } from "next/navigation";
+import { ChangeEvent, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { zodResolver } from '@hookform/resolvers/zod';
-import { UserValidation } from '@/lib/validations/user';
-import Image from "next/image";
-import * as z from "zod";
-import { ChangeEvent, useState } from 'react';
-import { isBase64Image } from '@/lib/utils';
-import { useUploadThing } from '@/lib/uploadthing';
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+
+import { useUploadThing } from "@/lib/uploadthing";
+import { isBase64Image } from "@/lib/utils";
+
+import { UserValidation } from "@/lib/validations/user";
+import { updateUser } from "@/lib/actions/user.actions";
 
 
 interface Props {
@@ -33,19 +38,22 @@ interface Props {
     btnTitle: string;
 }
 
-const AccountProfile = ( {user, btnTitle}: Props) => {
-    const [files, setFiles] = useState<File[]>([])
+const AccountProfile = ({ user, btnTitle }: Props) => {
+    const router = useRouter();
+    const pathname = usePathname();
     const { startUpload } = useUploadThing("media");
-
-    const form = useForm({
-        resolver: zodResolver(UserValidation),
-        defaultValues: {
-            profile_photo: user?.image || "",
-            name: user?.name || "",
-            username: user?.username || "",
-            bio: user?.bio || ""
-        }
-    })
+  
+    const [files, setFiles] = useState<File[]>([]);
+  
+    const form = useForm<z.infer<typeof UserValidation>>({
+      resolver: zodResolver(UserValidation),
+      defaultValues: {
+        profile_photo: user?.image ? user.image : "",
+        name: user?.name ? user.name : "",
+        username: user?.username ? user.username : "",
+        bio: user?.bio ? user.bio : "",
+      },
+    });
 
   const handleImage = (e: ChangeEvent<HTMLInputElement>, fieldChange: (value: string) => void) => {
     e.preventDefault(); // Prevents browser from preloading
@@ -70,7 +78,8 @@ const AccountProfile = ( {user, btnTitle}: Props) => {
 
         fileReader.readAsDataURL(file);
     }
-  }
+  };
+
   // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof UserValidation>) => {
     // blob is term for photo 
@@ -87,10 +96,34 @@ const AccountProfile = ( {user, btnTitle}: Props) => {
         if (imgRes && imgRes[0].fileUrl) {
             values.profile_photo = imgRes[0].fileUrl;
         }
-
-    /////////////////////    // TODO: Update user profile
     }
-  }
+    // Update user profile
+    // Parameters
+    //  object with properties:
+        //  userId
+        //  username
+        //  name
+        //  bio
+        //  image
+        //  path
+    await updateUser({
+        userId: user.id,
+        username: values.username,
+        name: values.name,
+        bio: values.bio,
+        image: values.profile_photo,
+        path: pathname,
+    });
+
+    // If the pathname is edit profile page
+    if (pathname === '/profile/edit') {
+        // Go back to previous age
+        router.back();
+    } else {
+        // Go back to homepage
+        router.push('/');
+    }
+  };
     return (
         <Form {...form}>
             <form 
@@ -131,6 +164,7 @@ const AccountProfile = ( {user, btnTitle}: Props) => {
                         onChange={(e) => handleImage(e, field.onChange)}
                         />
                     </FormControl>
+                    <FormMessage />
                 </FormItem>
                 )}
             />
@@ -150,6 +184,7 @@ const AccountProfile = ( {user, btnTitle}: Props) => {
                         {...field}
                         />
                     </FormControl>
+                    <FormMessage />
                 </FormItem>
                 )}
             />
@@ -169,6 +204,7 @@ const AccountProfile = ( {user, btnTitle}: Props) => {
                         {...field}
                         />
                     </FormControl>
+                    <FormMessage />
                 </FormItem>
                 )}
             />
@@ -188,13 +224,14 @@ const AccountProfile = ( {user, btnTitle}: Props) => {
                         {...field}
                         />
                     </FormControl>
+                    <FormMessage />
                 </FormItem>
                 )}
             />
             <Button type="submit" className='bg-primary-500'>Submit</Button>
             </form>
         </Form>
-    )
-}
+    );
+};
 
 export default AccountProfile;
