@@ -1,18 +1,23 @@
+//import { fetchUser } from "@/lib/actions/user.actions";
 import AccountProfile from "@/components/forms/AccountProfile";
 import { currentUser } from "@clerk/nextjs";
 
 async function Page() {
     const user = await currentUser()
+    if (!user) return null; // to avoid typescript warnings
+
+    const userInfo = {};
+
+    //const userInfo = await fetchUser(user.id);
+  //if (userInfo?.onboarded) redirect("/");
 
     const userData = {
         id: user?.id,
-        objectId: userInfo?._id
-        username: userInfo.username || user?.
-        name: userInfo?.name || user?.firstName ||
-        ""
+        objectId: userInfo?._id,
+        username: userInfo.username || user?.username,
+        name: userInfo?.name || user?.firstName || "",
         bio: userInfo?.bio || "",
-        image: userInfo?.image || user?.imageUrl
-
+        image: userInfo?.image || user?.imageUrl,
     }
     return (
         <main className="mx-auto flex max-w-3xl
@@ -24,7 +29,9 @@ async function Page() {
             </p>
 
             <section className="mt-9 bg-dark-2 p-10">
-                <AccountProfile />
+                <AccountProfile 
+                user={userData}
+                btnTitle="Continue"/>
             </section>
         </main>
     )
