@@ -18,7 +18,7 @@ const communitySchema = new mongoose.Schema({
   bio: String,
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Thread'
+    ref: "Thread",
   },
   threads: [
     {
@@ -29,13 +29,13 @@ const communitySchema = new mongoose.Schema({
   members: [
     {
         tyype: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }
-  ]
+        ref: "User",
+    },
+  ],
 });
 
 // First checks if the model of the user exist on the Database,
 //  if not, it creates one using the userSchema
-const Community = mongoose.models.User || mongoose.model('Community', communitySchema);
+const Community = mongoose.models.User || mongoose.model("Community", communitySchema);
 
 export default Community;
