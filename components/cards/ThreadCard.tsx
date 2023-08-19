@@ -26,6 +26,8 @@ interface Props {
     isComment?: boolean;
 }
 
+// Thread Card is the section containing all the thread info such as
+//  author, community, created at time, author image, etc.
 const ThreadCard = ({
     id,
     currentUserId,
