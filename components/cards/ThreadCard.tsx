@@ -1,6 +1,7 @@
 import { formatDateString } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
+import DeleteThread from "../forms/DeleteThread";
 
 // "|" means OR
 interface Props {
@@ -89,6 +90,11 @@ const ThreadCard = ({
                     </div>
                 </div>
                 {/* TODO: DeleteThread */}
+                {(currentUserId === author.id) && (<DeleteThread
+                    threadId={JSON.parse(JSON.stringify(id))}
+                />
+                )
+                }
                 {/* TODO: Show comment logos */}
                 
             </div>

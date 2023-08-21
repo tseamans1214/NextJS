@@ -151,6 +151,7 @@ export async function deleteThread(id: string, path: string): Promise<void> {
       { $pull: { threads: { $in: descendantThreadIds } } }
     );
 
+    console.log("Thread deleted");
     revalidatePath(path);
   } catch (error: any) {
     throw new Error(`Failed to delete thread: ${error.message}`);
