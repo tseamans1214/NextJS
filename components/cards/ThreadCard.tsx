@@ -41,6 +41,8 @@ const ThreadCard = ({
     comments,
     isComment,
 }: Props) => {
+    console.log(`content:${content}`);
+    console.log(`isComment:${isComment}`);
     return (
         <article className={`flex w-full flex-col rounded- ${isComment ?
          'px-0 xs:px-7' : 'bg-dark-2 p-7'} `}>
@@ -80,22 +82,21 @@ const ThreadCard = ({
                                 <Image src="/assets/share.svg" alt="share" width="24"
                                 height={24} className="cursor-pointer object-contain" />
                             </div>
-
-                        {isComment && comments.length > 0 && (
-                            <Link href={`/thread/${id}`}>
-                                <p className="mt-1 text-subtle-medium text-gray-1">{comments.length} replies</p>
-                            </Link>
-                        )}
+                        {/* Shows link with text for # of replies and likes */}
+                        <Link href={`/thread/${id}`}>
+                            <p className="mt-1 text-subtle-medium text-gray-1">{comments.length} replies - 0 likes</p>
+                        </Link>    
                         </div>
                     </div>
                 </div>
-                {/* TODO: DeleteThread */}
+                {/* DeleteThread Button (shows if currentUser matches thread author) */}
                 {(currentUserId === author.id) && (<DeleteThread
                     threadId={JSON.parse(JSON.stringify(id))}
                 />
                 )
                 }
                 {/* TODO: Show comment logos */}
+                
                 
             </div>
             {!isComment && community && (
