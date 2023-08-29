@@ -240,3 +240,30 @@ export async function addCommentToThread(
     throw new Error("Unable to add comment");
   }
 }
+
+export async function addUserLike(threadId: string, userId: string, path: string) : Promise<void>  {
+  try {
+    connectToDB();
+
+    // Find the thread to add the user like too
+    const thread = await Thread.findById(threadId);
+    //const user = await User.findById(userId);
+
+    // If the user has not liked it before, add it
+    if (thread.userLikes.includes(userId) === false) {
+      thread.userLikes.push(userId);
+    } else { // Remove the like
+      thread.userLikes.remove(userId);
+    }
+
+    // Save the updated thread to the database
+    await thread.save();
+
+    // Revalidate the Path to show changes immediately
+    revalidatePath(path);
+  }
+  catch (error: any) {
+    console.error("Error while adding user like: ", error);
+  }
+}
+
