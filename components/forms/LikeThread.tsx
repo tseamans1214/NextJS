@@ -6,15 +6,16 @@ import Image from "next/image";
 interface Props {
   threadId: string;
   currentUserId: string;
+  imageSource: string;
 }
 
-function LikeThread({ threadId, currentUserId }: Props) {
+function LikeThread({ threadId, currentUserId, imageSource }: Props) {
   const router = useRouter();
   const pathname = usePathname();
 
   return (
     <Image 
-        src="/assets/heart-gray.svg" 
+        src={imageSource}
         alt="heart" width="24"
         height={24}
         className="cursor-pointer object-contain"
