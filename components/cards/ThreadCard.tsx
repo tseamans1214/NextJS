@@ -80,7 +80,12 @@ const ThreadCard = ({
 
                         <div className={`${isComment && 'mb-10' } mt-5 flex flex-col gap-3`}>
                             <div className="flex gap-3.5">
-                                <LikeThread threadId={JSON.parse(JSON.stringify(id))} currentUserId={currentUserInfoID} />
+                                {likes && likes.includes(JSON.parse(currentUserInfoID)) ? (
+                                    <LikeThread threadId={JSON.parse(JSON.stringify(id))} currentUserId={currentUserInfoID} imageSource="/assets/heart-filled.svg"/>
+                                ) : (
+                                    <LikeThread threadId={JSON.parse(JSON.stringify(id))} currentUserId={currentUserInfoID} imageSource="/assets/heart-gray.svg"/>
+                                )
+                                }
                                 <Link href={`/thread/${id}`}>
                                     <Image src="/assets/reply.svg" alt="reply" width="24"
                                     height={24} className="cursor-pointer object-contain" />
