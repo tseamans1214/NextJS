@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { string } from "zod";
 
 const threadSchema = new mongoose.Schema({
     text: { 
@@ -21,6 +22,13 @@ const threadSchema = new mongoose.Schema({
     parentId: { // ID of parent Thread
         type: String
     },
+    userLikes: [
+        {
+            //type: String
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        }
+    ],
     children: [ // Can have an array of children Threads (Comments)
         {
             type: mongoose.Schema.Types.ObjectId,
