@@ -29,16 +29,20 @@ interface Result {
         image: string;
       };
     }[];
+    userLikes: {
+        user: {id: string;}
+    }[];
   }[];
 }
 
 interface Props {
   currentUserId: string;
+  currentUserInfoID: string;
   accountId: string;
   accountType: string;
 }
 
-async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
+async function ThreadsTab({ currentUserId, currentUserInfoID, accountId, accountType }: Props) {
   let result: Result;
 
   if (accountType === "Community") {
@@ -58,6 +62,7 @@ async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
           key={thread._id}
           id={thread._id}
           currentUserId={currentUserId}
+          currentUserInfoID={currentUserInfoID}
           parentId={thread.parentId}
           content={thread.text}
           author={
@@ -76,6 +81,7 @@ async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
           }
           createdAt={thread.createdAt}
           comments={thread.children}
+          likes={thread.userLikes}
         />
       ))}
     </section>
