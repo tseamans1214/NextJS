@@ -22,6 +22,7 @@ function LikeThread({ threadId, currentUserId, imageSource }: Props) {
         onClick={async() =>{
             await addUserLike(threadId, JSON.parse(currentUserId), pathname);
             router.push(pathname);
+            router.refresh();
         }}
     />
   );

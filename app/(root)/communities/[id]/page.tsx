@@ -9,10 +9,15 @@ import ProfileHeader from "@/components/shared/ProfileHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { fetchCommunityDetails } from "@/lib/actions/community.actions";
+import { fetchUser } from "@/lib/actions/user.actions";
+import { redirect } from "next/navigation";
 
 async function Page({ params }: { params: { id: string } }) {
   const user = await currentUser();
   if (!user) return null;
+
+  const userInfo = await fetchUser(user.id);
+  if (!userInfo.onboarded) redirect('/onboarding');
 
   const communityDetails = await fetchCommunityDetails(params.id);
 
@@ -55,6 +60,7 @@ async function Page({ params }: { params: { id: string } }) {
             {/* @ts-ignore */}
             <ThreadsTab
               currentUserId={user.id}
+              //currentUserInfoID={JSON.stringify(userInfo._id) || ""}
               accountId={communityDetails._id}
               accountType='Community'
             />

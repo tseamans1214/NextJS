@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation";
 
 import { fetchCommunityPosts } from "@/lib/actions/community.actions";
-import { fetchUserPosts } from "@/lib/actions/user.actions";
+import { fetchUser, fetchUserPosts } from "@/lib/actions/user.actions";
 
 import ThreadCard from "../cards/ThreadCard";
+import { currentUser } from "@clerk/nextjs";
 
 interface Result {
   name: string;
@@ -29,11 +30,15 @@ interface Result {
         image: string;
       };
     }[];
+    userLikes: {
+        user: {id: string;}
+    }[];
   }[];
 }
 
 interface Props {
   currentUserId: string;
+  currentUserInfoID: string;
   accountId: string;
   accountType: string;
 }
@@ -51,6 +56,12 @@ async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
     redirect("/");
   }
 
+  const user = await currentUser();
+  if (!user) return null;
+
+  const userInfo = await fetchUser(user.id);
+  if (!userInfo.onboarded) redirect('/onboarding');
+
   return (
     <section className='mt-9 flex flex-col gap-10'>
       {result.threads.map((thread) => (
@@ -58,6 +69,7 @@ async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
           key={thread._id}
           id={thread._id}
           currentUserId={currentUserId}
+          currentUserInfoID={JSON.stringify(userInfo._id) || ""}
           parentId={thread.parentId}
           content={thread.text}
           author={
@@ -76,6 +88,7 @@ async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
           }
           createdAt={thread.createdAt}
           comments={thread.children}
+          likes={thread.userLikes}
         />
       ))}
     </section>

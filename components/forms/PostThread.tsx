@@ -47,6 +47,7 @@ function PostThread({ userId }: Props) {
     });
 
     router.push("/");
+    router.refresh();
   };
 
   return (

@@ -52,6 +52,7 @@ async function Page({ params }: { params: {id: string}}) {
                             {/* @ts-ignore ignores the error*/} 
                             <ThreadsTab 
                                 currentUserId={user.id}
+                                currentUserInfoID={JSON.stringify(userInfo._id) || ""}
                                 accountId={userInfo.id}
                                 accountType="User"
                             />
