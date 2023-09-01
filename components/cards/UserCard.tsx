@@ -1,18 +1,27 @@
 "use client"
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { followUser } from "@/lib/actions/user.actions";
 
 interface Props {
     id: string;
+    followId: string;
     name: string;
     username: string;
     imgUrl: string;
     personType: string;
+    currentUserId: string;
+    follows: {
+        user: {
+            id: string;
+        }
+    }[];
 }
 
-const UserCard = ({id, name, username, imgUrl, personType } : Props) => {
+const UserCard = ({id, name, username, imgUrl, personType, currentUserId, followId, follows } : Props) => {
     const router = useRouter();
+    const pathname = usePathname();
     return (
         <article className="user-card">
             <div className="user-card_avatar">
@@ -32,6 +41,19 @@ const UserCard = ({id, name, username, imgUrl, personType } : Props) => {
             <Button className="user-card_btn" onClick={() => router.push(`/profile/${id}`)}>
                 View
             </Button>
+            <Button className="user-card_btn" onClick={async() =>{
+                console.log("ID: ", id);
+                await followUser(
+                    JSON.parse(currentUserId), JSON.parse(followId), pathname);
+                }}>
+                {follows && follows.includes(JSON.parse(followId)) ? (
+                                    "Unfollow"
+                                ) : (
+                                    "Follow"
+                                )
+                }
+            </Button>
+            
         </article>
     );
 };
