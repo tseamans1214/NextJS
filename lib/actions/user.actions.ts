@@ -195,3 +195,30 @@ export async function getActivity(userId: string) {
     throw error;
   }
 }
+
+export async function followUser(userId: string, followId: string, path: string) : Promise<void>  {
+  try {
+    connectToDB();
+
+    // Find the user to add the follow to
+    const user = await User.findById(userId);
+    //const follow = await User.findById(followId);
+    //const user = await User.findById(userId);
+
+    // If the user has not followed this user already, follow them
+    if (user.follows.includes(followId) === false) {
+      user.follows.push(followId);
+    } else { // Remove unfollow the user
+      user.follows.remove(followId);
+    }
+
+    // Save the updated user to the database
+    await user.save();
+
+    // Revalidate the Path to show changes immediately
+    revalidatePath(path);
+  }
+  catch (error: any) {
+    console.error("Error while adding follow: ", error);
+  }
+}
