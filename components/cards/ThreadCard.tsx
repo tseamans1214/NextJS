@@ -31,6 +31,7 @@ interface Props {
     comments: {
       author: {
         image: string;
+        name: string;
       };
     }[]; // <- Specifies it as an array (of comments)
     isComment?: boolean;
@@ -51,7 +52,19 @@ const ThreadCard = ({
     comments,
     isComment,
 }: Props) => {
-    console.log("current User ID: ", currentUserId);
+    let commentProfileImages = [];
+    for (let i=0; i<3 && i<comments.length; i++) {
+        commentProfileImages.push(
+        <Link href={`/thread/${id}`}>
+            <Image 
+                src={comments[i].author.image}
+                alt={comments[i].author.name}
+                width={24}
+                height={24}
+                className={`cursor-pointer rounded-full`} />
+        </Link>    
+        );
+    }
     return (
         <article className={`flex w-full flex-col rounded- ${isComment ?
          'px-0 xs:px-7' : 'bg-dark-2 p-7'} `}>
@@ -69,6 +82,20 @@ const ThreadCard = ({
                         
                         {/* Line below profile pick showing thread line */}
                         <div className="thread-card_bar" /> 
+                        {/* TODO: Show comment logos */}
+                        <div className="flex flex-hor">
+                            {commentProfileImages}
+                        </div>
+                        {/* {comments.map((comment) => (
+                                <Link href={`/thread/${id}`}>
+                                    <Image 
+                                        src={comment.author.image}
+                                        alt={comment.author.name}
+                                        width={24}
+                                        height={24}
+                                        className="cursor-pointer rounded-full" />
+                                </Link>
+                        ))}  */}
                     </div>
 
                     <div className="flex w-full flex-col">
@@ -95,22 +122,16 @@ const ThreadCard = ({
                                 <Image src="/assets/share.svg" alt="share" width="24"
                                 height={24} className="cursor-pointer object-contain" />
                             </div>
-                        {/* Shows link with text for # of replies and likes */}
-                        <Link href={`/thread/${id}`}>
-                            <p className="mt-1 text-subtle-medium text-gray-1">{comments.length} replies - {likes && (likes.length)} likes</p>
-                        </Link>    
+                            {/* Shows link with text for # of replies and likes */}
+                            <Link href={`/thread/${id}`}>
+                                <p className="mt-1 text-subtle-medium text-gray-1">{comments.length} replies - {likes && (likes.length)} likes</p>
+                            </Link>
+                             
                         </div>
+                         
                     </div>
+                    
                 </div>
-                {/* DeleteThread Button (shows if currentUser matches thread author) */}
-                {(currentUserId === author.id) && (<DeleteThread
-                    threadId={JSON.parse(JSON.stringify(id))}
-                />
-                )
-                }
-                {/* TODO: Show comment logos */}
-                
-                
             </div>
             {!isComment && community && (
                 <Link href={`/communities/${community.id}`} className='mt-5 flex items-center'>

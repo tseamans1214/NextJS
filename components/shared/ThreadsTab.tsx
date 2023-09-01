@@ -5,6 +5,7 @@ import { fetchUser, fetchUserPosts } from "@/lib/actions/user.actions";
 
 import ThreadCard from "../cards/ThreadCard";
 import { currentUser } from "@clerk/nextjs";
+import { StringToBoolean } from "class-variance-authority/types";
 
 interface Result {
   name: string;
@@ -28,6 +29,7 @@ interface Result {
     children: {
       author: {
         image: string;
+        name: string;
       };
     }[];
     userLikes: {
