@@ -49,7 +49,7 @@ const Comment = ({ threadId, currentuserImg, currentUserId } : Props) => {
         //  JSON.parse(currentUserId): author
         // pathname: current url
         await addCommentToThread(threadId, values.thread, JSON.parse(currentUserId), pathname); 
-
+        router.refresh()
         // Clear and reset the form
         form.reset();
     }

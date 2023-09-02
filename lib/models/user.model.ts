@@ -32,6 +32,13 @@ const userSchema = new mongoose.Schema({
       ref: "Community",
     },
   ],
+  follows: [
+        {
+            //type: String
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        }
+  ],
 });
 
 // First checks if the model of the user exist on the Database,

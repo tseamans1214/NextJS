@@ -40,6 +40,9 @@ async function Page() {
                                 username={person.username}
                                 imgUrl={person.image}
                                 personType='User'
+                                currentUserId={JSON.stringify(userInfo._id) || ""}
+                                followId={JSON.stringify(person._id)}
+                                follows={userInfo.follows}
                             />
                         ))}
                     </>
