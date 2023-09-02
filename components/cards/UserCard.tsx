@@ -45,6 +45,7 @@ const UserCard = ({id, name, username, imgUrl, personType, currentUserId, follow
                 console.log("ID: ", id);
                 await followUser(
                     JSON.parse(currentUserId), JSON.parse(followId), pathname);
+                    router.refresh();
                 }}>
                 {follows && follows.includes(JSON.parse(followId)) ? (
                                     "Unfollow"
