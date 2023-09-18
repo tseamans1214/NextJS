@@ -3,6 +3,7 @@ import { currentUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { formatDateString } from "@/lib/utils";
 
 async function Page() {
     const user = await currentUser();
@@ -34,8 +35,13 @@ async function Page() {
                                     <p className="!text-small-regular text-light-1">
                                         <span className="mr-1 text-primary-500">
                                             {activity.author.name}
-                                        </span> {" "}
+                                        </span> 
+                                        {" "}
                                         replied to your thread
+                                        {" "}
+                                        <span className='text-subtle-medium text-gray-1'>
+                                            {formatDateString(activity.createdAt)}
+                                        </span>
                                     </p>
                                 </article>
                             </Link>
