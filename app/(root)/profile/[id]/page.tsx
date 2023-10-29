@@ -8,18 +8,23 @@ import Image from "next/image";
 import ThreadsTab from '@/components/shared/ThreadsTab';
 
 async function Page({ params }: { params: {id: string}}) {
-    const user = await currentUser();
+    const loggedInUser = await currentUser();
 
-    if (!user) return null;
+    if (!loggedInUser) return null;
+    // currently logged in user's info
+    const currentUserInfo = await fetchUser(loggedInUser.id);
+    if (!currentUserInfo?.onboarded) redirect('/onboarding');
 
+    // User's page info
     const userInfo = await fetchUser(params.id);
 
-    if (!userInfo?.onboarded) redirect('/onboarding');
+    
     return (
         <section>
             <ProfileHeader 
-                accountId={userInfo.id}
-                authUserId={user.id}
+                accountId={userInfo._id}
+                authUserId={currentUserInfo._id}
+                follows={currentUserInfo.follows}
                 name={userInfo.name}
                 username={userInfo.username}
                 imgUrl={userInfo.image}
@@ -51,7 +56,7 @@ async function Page({ params }: { params: {id: string}}) {
                         <TabsContent key={`content-${tab.label}`} value={tab.value} className="w-full text-light-1">
                             {/* @ts-ignore ignores the error*/} 
                             <ThreadsTab 
-                                currentUserId={user.id}
+                                currentUserId={loggedInUser.id}
                                 currentUserInfoID={JSON.stringify(userInfo._id) || ""}
                                 accountId={userInfo.id}
                                 accountType="User"

@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { followUser } from "@/lib/actions/user.actions";
+import FollowUser from "../forms/FollowUser";
 
 interface Props {
     id: string;
@@ -41,19 +42,12 @@ const UserCard = ({id, name, username, imgUrl, personType, currentUserId, follow
             <Button className="user-card_btn" onClick={() => router.push(`/profile/${id}`)}>
                 View
             </Button>
-            <Button className="user-card_btn" onClick={async() =>{
-                console.log("ID: ", id);
-                await followUser(
-                    JSON.parse(currentUserId), JSON.parse(followId), pathname);
-                    router.refresh();
-                }}>
-                {follows && follows.includes(JSON.parse(followId)) ? (
-                                    "Unfollow"
-                                ) : (
-                                    "Follow"
-                                )
-                }
-            </Button>
+            {/* Follow User Button */}
+            <FollowUser 
+                followId={followId}
+                currentUserId={currentUserId}
+                follows={follows}
+            />
             
         </article>
     );
